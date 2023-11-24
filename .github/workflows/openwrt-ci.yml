@@ -2,10 +2,10 @@ name: OpenWrt-CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 permissions:
-  contents: read
+  contents: reader
 
 jobs:
 
