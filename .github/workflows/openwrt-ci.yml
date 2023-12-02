@@ -2,7 +2,7 @@ name: OpenWrt-CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "develop" ]
 
 jobs:
 
@@ -40,7 +40,9 @@ jobs:
           ./scripts/feeds install -a
 
       - name: Generate configuration file
-        run: cp Nuvoton/config/config_nuc980_iot .config
+        run: |
+          cp Nuvoton/config/config_nuc970_evb .config
+          sed -i 's|# CONFIG_MAKE_TOOLCHAIN is not set|CONFIG_MAKE_TOOLCHAIN=y|g' ./config
 
       - name: Download packages
         run: make download -j16
@@ -59,26 +61,12 @@ jobs:
 
       - name: Prepare artifact
         run: |
-          mkdir -p ./artifact/package
-          mkdir -p ./artifact/buildinfo
-          rm -rf $(find ./bin/targets/ -type d -name "packages")
-          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
-          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+          rm -rf ./artifact/bin
+          mkdir -p ./artifact/bin
+          cp -rf ./bin/* ./artifact/bin
 
-      - name: Upload buildinfo
+      - name: Upload bininfo
         uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt_buildinfo
-          path: ./artifact/buildinfo/
-
-      - name: Upload package
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_package
-          path: ./artifact/package/
-
-      - name: Upload firmware
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_firmware
-          path: ./bin/targets/
+          name: OpenWrt_bininfo
+          path: ./artifact/bin/
