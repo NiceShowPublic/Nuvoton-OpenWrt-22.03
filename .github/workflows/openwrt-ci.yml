@@ -42,7 +42,7 @@ jobs:
       - name: Generate configuration file
         run: |
           cp Nuvoton/config/config_nuc970_evb .config
-          sed -i 's|# CONFIG_MAKE_TOOLCHAIN is not set|CONFIG_MAKE_TOOLCHAIN=y|g' ./config
+          sed -i 's|# CONFIG_MAKE_TOOLCHAIN is not set|CONFIG_MAKE_TOOLCHAIN=y|g' .config
 
       - name: Download packages
         run: make download -j16
